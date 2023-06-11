@@ -2,7 +2,7 @@ const User = require('../models/User');
 const Thought = require('../models/Thought');
 const router = require('express').Router();
 
-router.get('/users', async (req, res) => {
+router.get('api/users', async (req, res) => {
     try {
       const users = await User.find();
       res.json(users);
@@ -12,7 +12,7 @@ router.get('/users', async (req, res) => {
     }
   });
 
-  router.get('/users/:id', async (req, res) => {
+  router.get('api/users/:id', async (req, res) => {
     try {
       const user = await User.findOne({ _id: req.params.id });
       if (!user) {
@@ -26,7 +26,7 @@ router.get('/users', async (req, res) => {
   });
 
   // create a new user
-  router.post('/users', async (req, res) => {
+  router.post('api/users', async (req, res) => {
     try {
       const userData = await User.create(req.body);
       res.json(userData);
@@ -37,7 +37,7 @@ router.get('/users', async (req, res) => {
   });
 
   //update a user
-  router.put('/users/:id', async (req, res) => {
+  router.put('api/users/:id', async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
           {_id: req.params.userid },
@@ -55,7 +55,7 @@ router.get('/users', async (req, res) => {
       }
     });
 //delete a courses
-router.delete('/users/:id', async (req, res) => {
+router.delete('api/users/:id', async (req, res) => {
     try {
     const user = await User.findOneAndDelete({ _id: req.params.userid });
 
@@ -69,4 +69,47 @@ router.delete('/users/:id', async (req, res) => {
     res.status(500).json(err);
   }
 });
+ 
+//add a friend to users friends list:
 
+// POST route to add a new friend to a user's friend list
+router.post('api/users/:userId/friends/:friendId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const friendId = req.params.friendId;
+  
+      // Find the user by ID and update the friends array
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        { $addToSet: { friends: friendId } },
+        { new: true }
+      );
+  
+      res.json(user);
+    } catch (err) {
+      console.error("unable to add friend")
+      res.status(500).json(err);
+    }
+  });
+
+  //delete friend using $pull method in mongo
+  router.delete('/users/:userId/friends/:friendId', async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const friendId = req.params.friendId;
+  
+      // Find the user by ID and update the friends array
+      const user = await User.findOneAndUpdate(
+        { _id: userId },
+        { $pull: { friends: friendId } },
+        { new: true }
+      );
+  
+      res.json(user);
+    } catch (err) {
+      res.status(500).json(err);
+    }
+  });
+  
+
+  

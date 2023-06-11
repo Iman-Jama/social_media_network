@@ -96,12 +96,16 @@ const seedData = async () => {
     await Promise.all([thought1.save(), thought2.save(),thought3.save(),thought4.save(), thought5.save(),thought6.save()]);
 
     console.log('Seed data created successfully!');
-  } catch (error) {
-    console.error('Error seeding data:', error);
-  } 
-}
-});
+} catch (error) {
+  console.error('Error seeding data:', error);
+} finally {
 
+  connection.close();
+}
+};
+
+// Call the seed data function
 seedData().then(() => process.exit());
+});
 
 

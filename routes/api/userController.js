@@ -1,8 +1,8 @@
-const User = require('../models/User');
-const Thought = require('../models/Thought');
+const User = require('../../models/User');
+const Thought = require('../../models/Thought');
 const router = require('express').Router();
 
-router.get('/api/users', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
       const users = await User.find();
       res.json(users);
@@ -12,9 +12,9 @@ router.get('/api/users', async (req, res) => {
     }
   });
 
-  router.get('/api/users/:id', async (req, res) => {
+  router.get('/:userId', async (req, res) => {
     try {
-      const user = await User.findOne({ _id: req.params.id });
+      const user = await User.findOne({ _id: req.params.userId }).select('-__v').populate('thoughts').populate('friends');
       if (!user) {
         return res.status(404).json({ message: 'No user with that ID' });
       }
@@ -26,7 +26,7 @@ router.get('/api/users', async (req, res) => {
   });
 
   // create a new user
-  router.post('/api/users', async (req, res) => {
+  router.post('/', async (req, res) => {
     try {
       const userData = await User.create(req.body);
       res.json(userData);
@@ -37,10 +37,10 @@ router.get('/api/users', async (req, res) => {
   });
 
   //update a user
-  router.put('/api/users/:id', async (req, res) => {
+  router.put('/:userId', async (req, res) => {
     try {
         const user = await User.findOneAndUpdate(
-          {_id: req.params.userid },
+          {_id: req.params.userId },
           { $set: req.body },
           { runValidators: true, new: true }
         );
@@ -55,9 +55,9 @@ router.get('/api/users', async (req, res) => {
       }
     });
 //delete a courses
-router.delete('/api/users/:id', async (req, res) => {
+router.delete('/:userId', async (req, res) => {
     try {
-    const user = await User.findOneAndDelete({ _id: req.params.userid });
+    const user = await User.findOneAndDelete({ _id: req.params.userId });
 
     if (!user) {
       res.status(404).json({ message: 'No user with that ID' });
@@ -73,7 +73,7 @@ router.delete('/api/users/:id', async (req, res) => {
 //add a friend to users friends list:
 
 // POST route to add a new friend to a user's friend list
-router.post('/api/users/:userId/friends/:friendId', async (req, res) => {
+router.post('/:userId/friends/:friendId', async (req, res) => {
     try {
       const userId = req.params.userId;
       const friendId = req.params.friendId;
@@ -87,13 +87,13 @@ router.post('/api/users/:userId/friends/:friendId', async (req, res) => {
   
       res.json(user);
     } catch (err) {
-      console.error("unable to add friend")
+      console.log(err)
       res.status(500).json(err);
     }
   });
 
   //delete friend using $pull method in mongo
-  router.delete('/users/:userId/friends/:friendId', async (req, res) => {
+  router.delete('/:userId/friends/:friendId', async (req, res) => {
     try {
       const userId = req.params.userId;
       const friendId = req.params.friendId;

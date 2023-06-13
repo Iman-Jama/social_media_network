@@ -23,28 +23,28 @@ This project is a backend implementation for a social media website using Expres
 To get started with the project, follow these steps:<br>
 
 Clone the repository: git clone <repository_url><br>
-Install the dependencies: expressJS and Mongoose
-Start the server: ```npm start```<br>
+Install the dependencies: ```npm i expressJS && Mongoose```
+Start the server: ```node index.js```<br>
 
 ## <u>Routes</u>
 
-### User Routes
-`GET /api/users: Get all users.<br>
-GET /api/users/:id: Get a single user by ID.<br>
-POST /api/users: Create a new user.<br>
-PUT /api/users/:id: Update a user by ID.<br>
-DELETE /api/users/:id: Delete a user by ID.`<br>
+### **User Routes**
+```GET /api/users: Get all users```<br>
+```GET /api/users/:id: Get a single user by ID```<br>
+```POST /api/users: Create a new user```<br>
+```PUT /api/users/:id: Update a user by ID```<br>
+```DELETE /api/users/:id: Delete a user by ID.```<br>
 
-### Thoughts Routes
-`GET /api/thoughts: Get all thoughts.<br>
-GET /api/thoughts/:id: Get a single thought by ID.<br>
-POST /api/thoughts: Create a new thought.<br>
-PUT /api/thoughts/:id: Update a thought by ID.<br>
-DELETE /api/thoughts/:id: Delete a thought by ID.<br>
+### **Thoughts Routes**
+```GET /api/thoughts: Get all thoughts```<br>
+```GET /api/thoughts/:id: Get a single thought by ID```<br>
+```POST /api/thoughts: Create a new thought```<br>
+```PUT /api/thoughts/:id: Update a thought by ID```<br>
+```DELETE /api/thoughts/:id: Delete a thought by ID```<br>
 
-### Reactions Routes
-POST /api/thoughts/:thoughtId/reactions: Create a new reaction for a thought.
-DELETE /api/thoughts/:thoughtId/reactions/:reactionId: Delete a reaction from a thought.`
+### **Reactions Routes**
+```POST /api/thoughts/:thoughtId/reactions: Create a new reaction for a thought```<br>
+```DELETE /api/thoughts/:thoughtId/reactions/:reactionId: Delete a reaction from a thought```<br>
 
 ## <u>Contact Me</u>
 

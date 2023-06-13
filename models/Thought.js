@@ -3,7 +3,7 @@ const {model, Schema, Types} = require('mongoose');
 const reactionSchema = new Schema(
   {
     reactionId: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       default: () => new Types.ObjectId(),
     },
     reactionBody: {
@@ -18,7 +18,9 @@ const reactionSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: (timestamp) => formatDate(timestamp),
+      get: timeStamp => timeStamp.toLocaleString()
+      
+     
     },
   },
   {
@@ -40,9 +42,7 @@ const thoughtSchema = new Schema(
     createdAt: {
       type: Date,
       default: Date.now,
-      get: function () {
-        return this._createdAt.toLocaleString()
-      },
+      get:timeStamp => timeStamp.toLocaleString()
     },
     username: {
       type: String,

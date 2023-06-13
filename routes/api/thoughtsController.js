@@ -1,39 +1,39 @@
-const {Thought, Reaction} = require('../models/Thought');
+const {Thought, Reaction} = require('../../models/Thought');
 const router = require('express').Router();
-const User = require('../models/User');
+const User = require('../../models/User');
 
-router.get('/api/thoughts', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
       const thoughts = await Thought.find();
       res.json(thoughts);
     } catch (err) {
-      console.error("Error fetching all thoughts")
+      console.error(err)
       res.status(500).json(err)
     }
   });
 
-  router.get('/api/thoughts/:id', async (req, res) => {
+  router.get('/:thoughtId', async (req, res) => {
     try {
-      const thoughts = await Thought.findOne({ _id: req.params.id });
+      const thoughts = await Thought.findOne({ _id: req.params.thoughtId });
       if (!thoughts) {
         return res.status(404).json({ message: 'No thought with that ID' });
       }
         res.json(thoughts);
     } catch (err) {
-      console.error("Error fetching thoughts")
+      console.error(err)
       res.status(500).json(err);
     }
   });
 
   // create a new thought
-  router.post('/api/thoughts', async (req, res) => {
+  router.post('/', async (req, res) => {
     try {
       const thoughtData = await Thought.create(req.body);
       const userId = req.body.userid;
 
       const user = await User.findOneAndUpdate(
         { _id: userId },
-        { $push: { thoughts: thoughtData._id } },
+        { $addToSet: { thoughts: thoughtData._id} },
         { new: true }
       );
 
@@ -45,10 +45,10 @@ router.get('/api/thoughts', async (req, res) => {
   });
 
   //update a thought
-  router.put('/api/thoughts/:id', async (req, res) => {
+  router.put('/thoughtId', async (req, res) => {
     try {
         const thoughts = await Thought.findOneAndUpdate(
-          {_id: req.params.thoughtid },
+          {_id: req.params.thoughtId },
           { $set: req.body },
           { runValidators: true, new: true }
         );
@@ -63,9 +63,9 @@ router.get('/api/thoughts', async (req, res) => {
       }
     });
 //delete a thought
-router.delete('/api/thoughts/:id', async (req, res) => {
+router.delete('/:thoughtId', async (req, res) => {
     try {
-    const thoughts = await Thought.findOneAndDelete({ _id: req.params.thoughtid });
+    const thoughts = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
 
     if (!thoughts) {
       res.status(404).json({ message: 'No thought with that ID' });
@@ -77,7 +77,7 @@ router.delete('/api/thoughts/:id', async (req, res) => {
 
 //get thought reactions:
 
-router.post('api/thoughts/:thoughtId/reactions', async (req, res) => {
+router.post('/:thoughtId/reactions', async (req, res) => {
     try {
       const thoughtId = req.params.thoughtId;
       const { reactionBody, username } = req.body;
@@ -98,9 +98,9 @@ router.post('api/thoughts/:thoughtId/reactions', async (req, res) => {
   });
 
   //delete friend using $pull method in mongo
-  router.delete('api/thoughts/:id/reactions/:reactionId', async (req, res) => {
+  router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
     try {
-        const thoughtId = req.params.thoughtid;
+        const thoughtId = req.params.thoughtId;
         const reactionId = req.params.reactionid;
   
       // Find the user by ID and update the friends array

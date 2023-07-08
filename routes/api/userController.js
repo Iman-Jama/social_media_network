@@ -54,19 +54,20 @@ router.get('/', async (req, res) => {
         res.status(500).json(err);
       }
     });
-//delete a courses
+
 router.delete('/:userId', async (req, res) => {
     try {
     const user = await User.findOneAndDelete({ _id: req.params.userId });
+    console.log(user);
 
     if (!user) {
-      res.status(404).json({ message: 'No user with that ID' });
+      return res.status(404).json({ message: 'No user with that ID' });
     }
-    await Thought.deleteMany({ _id: { $in: user.thoughts } });
-
-    res.json({ message: 'User and associated thoughts deleted!' });
+    
+    return res.status(200).json({ message: 'User deleted!' });
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json({ message: 'Internal server error' });
+    console.log(err);
   }
 });
  

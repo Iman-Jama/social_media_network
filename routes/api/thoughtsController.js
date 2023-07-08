@@ -29,7 +29,7 @@ router.get('/', async (req, res) => {
   router.post('/', async (req, res) => {
     try {
       const thoughtData = await Thought.create(req.body);
-      const userId = req.body.userid;
+      const userId = req.body.userId;
 
       const user = await User.findOneAndUpdate(
         { _id: userId },
@@ -45,7 +45,7 @@ router.get('/', async (req, res) => {
   });
 
   //update a thought
-  router.put('/thoughtId', async (req, res) => {
+  router.put('/:thoughtId', async (req, res) => {
     try {
         const thoughts = await Thought.findOneAndUpdate(
           {_id: req.params.thoughtId },
@@ -54,7 +54,7 @@ router.get('/', async (req, res) => {
         );
   
         if (!thoughts) {
-          res.status(404).json({ message: 'No thought with this id!' });
+          return res.status(404).json({ message: 'No thought with this id!' });
         }
   
         res.json(thoughts);
@@ -66,9 +66,10 @@ router.get('/', async (req, res) => {
 router.delete('/:thoughtId', async (req, res) => {
     try {
     const thoughts = await Thought.findOneAndDelete({ _id: req.params.thoughtId });
+    res.status(200).json({ message: 'thoughts deleted!' });
 
     if (!thoughts) {
-      res.status(404).json({ message: 'No thought with that ID' });
+      return res.status(404).json({ message: 'No thought with that ID' });
     };
   } catch (err) {
     res.status(500).json(err);
@@ -90,29 +91,29 @@ router.post('/:thoughtId/reactions', async (req, res) => {
         { new: true }
       );
   
-      res.json(thought);
+      return res.status(200).json({message:'reaction added!'});
     } catch (err) {
       console.error("unable to add reaction")
-      res.status(500).json(err);
+      return res.status(500).json(err);
     }
   });
 
-  //delete friend using $pull method in mongo
+
   router.delete('/:thoughtId/reactions/:reactionId', async (req, res) => {
     try {
         const thoughtId = req.params.thoughtId;
-        const reactionId = req.params.reactionid;
+        const reactionId = req.params.reactionId;
   
       // Find the user by ID and update the friends array
-      const thought = await User.findOneAndUpdate(
-        { _id: userId },
+      const thought = await Thought.findOneAndUpdate(
+        { _id: thoughtId },
         { $pull: { reactions: { reactionId: reactionId } } },
         { new: true }
       );
   
-      res.json(thought);
+      return res.status(200).json({message:'reaction deleted'});
     } catch (err) {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     }
   });
  

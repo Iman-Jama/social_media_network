@@ -29,7 +29,7 @@ Start the server: ```node index.js```<br>
 ## <u>Routes</u>
 
 ### **User Routes**
-```GET /api/users: Get all users```<br>
+```GET /api/users: Get all user```<br>
 ```GET /api/users/:id: Get a single user by ID```<br>
 ```POST /api/users: Create a new user```<br>
 ```PUT /api/users/:id: Update a user by ID```<br>

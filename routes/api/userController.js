@@ -82,14 +82,18 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
       // Find the user by ID and update the friends array
       const user = await User.findOneAndUpdate(
         { _id: userId },
-        { $addToSet: { friends: friendId } },
+        { $addToSet: { friends:friendId } },
         { new: true }
       );
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with that ID' });
+      }
   
-      res.json(user);
+      return res.status(200).json({message:"friend added successfully!"});
     } catch (err) {
       console.log(err)
-      res.status(500).json(err);
+      return res.status(500).json({message:"Error adding friend"});
     }
   });
 
@@ -105,10 +109,14 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
         { $pull: { friends: friendId } },
         { new: true }
       );
+
+      if (!user) {
+        return res.status(404).json({ message: 'No user with that ID' });
+      }
   
-      res.json(user);
+      return res.status(200).json({message: "friend deleted"});
     } catch (err) {
-      res.status(500).json(err);
+      return res.status(500).json(err);
     }
   });
 
